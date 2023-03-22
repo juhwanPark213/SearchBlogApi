@@ -1,0 +1,112 @@
+<th:block th:include="layout/header"></th:block>
+<th:block layout:fragment="css">
+<style>
+	.page {list-style-type: none; float:left; margin-left: 2px;}
+	.table {width: 100%;border: 1px solid #444444;border-collapse: collapse;}
+	.table th,td {border: 1px solid #444444;}
+</style>
+</th:block>
+<body>
+	<header>
+		<div>
+			<div class="container">
+				<div>
+					<div>
+						<h2 >Blog Search</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	
+	<section>
+	  <div class="container">
+		<div>
+			블로그 검색 페이지 입니다.
+		</div>
+		<div>
+			<input type="text" id="searchText" name="searchText" th:value="${searchModel.searchText}"></input>
+			<select id="sorting" name="sorting">
+				<option value="accuracy" th:selected="${searchModel.sorting=='accuracy'}">정확도순</option>
+				<option value="recency" th:selected="${searchModel.sorting=='recency'}">최신순</option>
+			</select>
+			<button onclick ="search(1)">검색</button>
+			<input type="hidden" id="pageNo" name="pageNo" value="1" />
+		</div>
+		<div id="searchList">
+			<div th:if="${#lists.size(result.list) != 0}">
+				<table class="table">
+					<thead>
+						<th>제목</th>
+						<th>내용</th>
+						<th>url</th>
+						<th>카페명</th>
+						<th>썸네일</th>
+						<th>최신글시간</th>						
+					</thead>
+					<tbody>
+						<tr th:each="list:${result.list}">
+							<td th:utext="${list.title}"></td>
+							<td th:text="${list.contents}"></td>
+							<td th:text="${list.url}"></td>
+							<td th:text="${list.cafename}"></td>
+							<td th:text="${list.thumbnail}"></td>
+							<td th:text="${list.datetime}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div th:if="${#lists.size(result.list) == 0}">
+				검색 결과가 없습니다.
+			</div>
+			<div th:if="${#lists.size(result.list) != 0}">
+				<ul>
+					<li th:each="page:${#numbers.sequence(result.pageInfo.startPage, result.pageInfo.lastPage)}" th:text="${'<' + page + '>'}" th:onclick="search([[${page}]])" class="page" th:style="${page == searchModel.pageNo?'color:#00B1FF':''}"></li>
+				</ul>
+		    </div>
+		    <div style="clear: BOTH;">
+				<div>
+					<h1>인기검색어 목록</h1>
+					<div th:each="list, stat:${result.keywordList}">
+						<p th:text="${stat.count + '순위' + ' 검색어 : ' + list.keyword + ' / 검색 횟수 : ' + list.count}"></p>
+					</div>
+				</div>
+			</div>	
+		</div>
+	  </div>
+	</section>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script>
+		function search(pageNo){
+			var searchText = $("#searchText").val();
+			
+			if(searchText ==''){
+				alert("검색어를 입력해 주세요");
+				return;
+			}
+			
+			var sorting = $("#sorting").val();
+			var vo= {
+				searchText:searchText,
+				sorting:sorting,
+				pageNo:pageNo
+			}
+			
+			var url = "/blog/search";
+			
+			$.ajax({
+	            url:url,
+	            type:"post",
+	            data:vo,
+	            success:function(data){
+	                $("#searchList").replaceWith(data);
+	            },
+	            error:function(data){
+	                
+	            }
+	        });
+		}
+	</script>
+</body>
+
+</html>
