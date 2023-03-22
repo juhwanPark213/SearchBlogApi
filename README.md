@@ -12,12 +12,14 @@
   + H2
   + Gradle
   + Junit5
++ View
+  + Thymeleaf
   
 ## 빌드 및 실행
 + Git, Java17 는 설치되어 있다고 가정합니다.
-+ Executable jar 파일 위치 : blogAPI/build/libs/blogApi-0.0.1-SNAPSHOT.jar (https://github.com/juhwanPark213/blogApi/tree/main/blogAPI/build/libs)
++ Executable jar 파일 위치 : blogAPI/build/libs/blogApi-0.0.1-SNAPSHOT.jar (https://github.com/juhwanPark213/SearchBlogApi/tree/main/blogAPI/build/libs)
 ```
-$ git clone https://github.com/juhwanPark213/blogApi.git
+$ git clone https://github.com/juhwanPark213/SearchBlogApi.git
 $ cd blogApi
 $ gradlew clean build
 $ java -jar build/libs/blogApi-0.0.1-SNAPSHOT.jar
